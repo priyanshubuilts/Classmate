@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClassMate | Student Notes & Project Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><img class="brand-logo" src="classmate-logo.png" alt="ClassMate logo"><div><strong>ClassMate</strong><small>YOUR STUDY PARTNER</small></div></div>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-link active" data-view="dashboard"><span class="nav-icon">D</span> Dashboard</button>
+      <button class="nav-link" data-view="notes"><span class="nav-icon">N</span> Class Notes</button>
+      <button class="nav-link" data-view="assignments"><span class="nav-icon">A</span> Assignments <span class="nav-count" id="assignmentNavCount">0</span></button>
+      <button class="nav-link" data-view="projects"><span class="nav-icon">P</span> Project Planner</button>
+      <div class="sidebar-bottom">
+        <div class="mini-card"><div class="mini-star">✦</div><strong>Small steps add up.</strong><p>Keep your notes organised and your deadlines in sight.</p></div>
+        <div class="local-badge"><span></span> Saved on this device</div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="mobile-brand"><img src="classmate-logo.png" alt="" class="mobile-logo">ClassMate</div>
+        <div class="breadcrumb">Student workspace <span>/</span> <strong id="pageCrumb">Dashboard</strong></div>
+        <div class="top-actions"><span class="date-pill" id="todayDate"></span><button class="avatar" title="Student workspace">S</button></div>
+      </header>
+
+      <section class="page-content">
+        <div class="welcome-row">
+          <div><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1 id="pageTitle">Make room for <span>great ideas.</span></h1><p class="subheading" id="pageSubtitle">Your notes, deadlines and project plans — all in one calm place.</p></div>
+          <div class="welcome-art" aria-hidden="true"><div class="art-sun"></div><div class="art-paper paper-one"></div><div class="art-paper paper-two"></div><div class="art-pencil"></div></div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon purple">N</span><span class="stat-caption">ALL NOTES</span></div><strong id="notesTotal">0</strong><p>Class notes saved</p><div class="stat-line purple-line"></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon orange">A</span><span class="stat-caption">UPCOMING</span></div><strong id="upcomingTotal">0</strong><p>Assignments to finish</p><div class="stat-line orange-line"></div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon green">P</span><span class="stat-caption">IN PROGRESS</span></div><strong id="projectsTotal">0</strong><p>Projects you're planning</p><div class="stat-line green-line"></div></article>
+        </div>
+
+        <div class="dashboard-grid" id="dashboardView">
+          <section class="panel recent-panel">
+            <div class="panel-heading"><div><h2>Recent class notes</h2><p>Your ideas, kept together.</p></div><button class="text-button" data-go="notes">View all →</button></div>
+            <div id="recentNotes" class="item-list"></div>
+            <button class="wide-add" data-action="new-note">＋ Create a note</button>
+          </section>
+          <section class="panel deadline-panel">
+            <div class="panel-heading"><div><h2>Coming up</h2><p>Stay one step ahead.</p></div><button class="text-button" data-go="assignments">View all →</button></div>
+            <div id="upcomingAssignments" class="item-list"></div>
+            <button class="wide-add" data-action="new-assignment">＋ Add assignment</button>
+          </section>
+        </div>
+
+        <section class="panel full-panel hidden" id="notesView">
+          <div class="panel-heading"><div><h2>Class notes</h2><p>Keep the important things easy to find.</p></div><div class="heading-actions"><button class="secondary-button" id="exportNotes" type="button">Export notes</button><button class="primary-button" data-action="new-note">+ New note</button></div></div>
+          <div class="toolbar"><input id="noteSearch" class="search-input" type="search" placeholder="Search your notes..." /><select id="noteSubjectFilter" aria-label="Filter notes by subject"><option value="all">All subjects</option></select></div>
+          <div id="allNotes" class="cards-grid"></div>
+        </section>
+
+        <section class="panel full-panel hidden" id="assignmentsView">
+          <div class="panel-heading"><div><h2>Assignment tracker</h2><p>Track due dates and mark work as complete.</p></div><button class="primary-button" data-action="new-assignment">＋ New assignment</button></div>
+          <div class="toolbar"><input id="assignmentSearch" class="search-input" type="search" placeholder="Search assignments..." /><select id="assignmentStatusFilter" aria-label="Filter assignments"><option value="all">All assignments</option><option value="pending">Pending</option><option value="done">Completed</option></select></div>
+          <div id="allAssignments" class="item-list assignment-list"></div>
+        </section>
+
+        <section class="panel full-panel hidden" id="projectsView">
+          <div class="panel-heading"><div><h2>Project planner</h2><p>Turn a big idea into manageable steps.</p></div><button class="primary-button" data-action="new-project">＋ New project</button></div>
+          <div id="allProjects" class="cards-grid"></div>
+        </section>
+        <footer>Made for student life <span>✦</span> Your information stays in this browser.</footer>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="entryDialog" class="entry-dialog">
+    <form id="entryForm" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow" id="dialogEyebrow">ADD TO YOUR WORKSPACE</p><h2 id="dialogTitle">Create a note</h2></div><button type="button" class="close-button" id="closeDialog" aria-label="Close">×</button></div>
+      <input type="hidden" id="entryType" />
+      <label for="entryTitle">Title</label><input id="entryTitle" required maxlength="90" placeholder="e.g. Introduction to economics" />
+      <div id="noteFields">
+        <label for="entrySubject">Subject / class</label><input id="entrySubject" maxlength="50" placeholder="e.g. MEFA, Data Structures" />
+        <label for="entryBody">Notes</label><textarea id="entryBody" rows="5" placeholder="Write the key points here..."></textarea>
+      </div>
+      <div id="assignmentFields" class="hidden">
+        <label for="entryDue">Due date</label><input id="entryDue" type="date" />
+        <label for="entryPriority">Priority</label><select id="entryPriority"><option value="Normal">Normal</option><option value="High">High</option><option value="Low">Low</option></select>
+      </div>
+      <div id="projectFields" class="hidden">
+        <label for="entryProjectSubject">Course / subject</label><input id="entryProjectSubject" maxlength="50" placeholder="e.g. Web Development" />
+        <label for="entryProjectDue">Target date (optional)</label><input id="entryProjectDue" type="date" />
+        <label for="entryProjectBody">Plan / next steps</label><textarea id="entryProjectBody" rows="4" placeholder="1. Research&#10;2. Design&#10;3. Build"></textarea>
+        <label for="entryProjectProgress">Project progress</label><select id="entryProjectProgress"><option value="0">Not started (0%)</option><option value="25">25% complete</option><option value="50">50% complete</option><option value="75">75% complete</option><option value="100">Completed (100%)</option></select>
+      </div>
+      <div class="dialog-actions"><button type="button" class="secondary-button" id="cancelDialog">Cancel</button><button type="submit" class="primary-button">Save item</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
